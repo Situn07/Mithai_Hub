@@ -1,14 +1,14 @@
 # MithaiHub - Sweet Shop Management System
 
-MithaiHub is a Full Stack Sweet Shop Management System built to streamline product management, customer ordering, packaging workflow, and order tracking.
+MithaiHub is a Full Stack Sweet Shop Management System built using React.js, Node.js, Express.js, and MongoDB Atlas.
 
-The application provides separate workflows for Customers, Packaging Staff, and Administrators, making sweet shop operations simple and efficient.
+The application streamlines sweet shop operations through dedicated modules for Customers, Packaging Staff, and Administrators.
 
 ---
 
-## Features
+# Features
 
-### Customer Module
+## Customer Module
 
 * Browse sweet products
 * Search products instantly
@@ -18,79 +18,88 @@ The application provides separate workflows for Customers, Packaging Staff, and 
 * Place orders
 * Automatic token generation
 
-### Packaging Staff Module
+---
 
-* Staff login
+## Packaging Staff Module
+
+* Staff Login
 * View incoming orders
 * Manage packing queue
-* Update order status:
+* Update order status
 
-  * NEW
-  * PACKING
-  * READY
-  * DELIVERED
+Order Status Flow:
 
-### Admin Module
-
-* Admin login
-* Dashboard analytics
-* Product management
-* Add products
-* Edit products
-* Delete products
-* View recent orders
-* Order details modal
-* Delete orders
-* Revenue tracking
-* Product count tracking
-* Today's order statistics
+NEW → PACKING → READY → DELIVERED
 
 ---
 
-## Tech Stack
+## Admin Module
 
-### Frontend
+* Admin Login
+* Dashboard Analytics
+* Product Management
+* Add Products
+* Edit Products
+* Delete Products
+* View Recent Orders
+* View Order Details
+* Delete Orders
+* Revenue Tracking
+* Product Statistics
+* Today's Order Statistics
+
+---
+
+# Tech Stack
+
+## Frontend
 
 * React.js
 * Vite
 * Tailwind CSS
 * shadcn/ui
-* Lucide React
 * Axios
 * React Router DOM
+* Lucide React
 
-### Backend
+## Backend
 
 * Node.js
 * Express.js
-* MongoDB
+* MongoDB Atlas
 * Mongoose
-* bcryptjs
-* cors
-* dotenv
+* CORS
+* Dotenv
 
 ---
 
+# Test Credentials
 
-## Product Features
+## Admin
 
-Each sweet supports multiple weight options:
+Username: admin
 
-* 250gm
-* 500gm
-* 1kg
+Password: admin123
 
-Pricing automatically updates based on selected weight and quantity.
+## Packaging Staff
+
+Username: packing
+
+Password: packing123
 
 ---
 
-## Order Workflow
+# Project Workflow
 
 Customer Places Order
 
 ↓
 
 Token Generated
+
+↓
+
+Order Saved In MongoDB
 
 ↓
 
@@ -102,52 +111,112 @@ NEW → PACKING → READY → DELIVERED
 
 ↓
 
-Admin Can Monitor Complete Workflow
+Admin Monitors Complete Workflow
 
 ---
 
-## Installation
+# Validation Steps
 
-### Frontend
+### Admin Flow
+
+1. Login as Admin
+2. Add Products
+3. Edit Products
+4. Delete Products
+5. View Dashboard Statistics
+6. Monitor Orders
+
+### Customer Flow
+
+1. Browse Products
+2. Add Products To Cart
+3. Place Order
+4. Receive Token Number
+
+### Packaging Flow
+
+1. Login as Packaging Staff
+2. View Incoming Orders
+3. Update Status
+4. Complete Order Workflow
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Situn07/Mithai_Hub.git
+```
+
+## Frontend Setup
+
+```bash
+cd frontend
 
 npm install
 
 npm run dev
+```
 
-### Backend
+## Backend Setup
+
+```bash
+cd backend
 
 npm install
 
 npm run dev
+```
 
 ---
 
-## Environment Variables
+# Environment Variables
 
-Create a .env file inside backend directory:
+Create a `.env` file inside the backend folder.
 
+```env
 PORT=5000
 
-MONGO_URI=your_mongodb_connection_string
+MONGO_URI=your_mongodb_atlas_connection_string
 
 ---
 
-## Future Improvements
 
-* Image Upload Support
-* Email Notifications
-* Sales Reports
-* Order Export
+
+# Key Functionalities
+
+* Product CRUD Operations
+* Order Management System
+* Token Generation System
+* Packing Workflow Management
+* Dashboard Analytics
+* Revenue Tracking
+* Role Based Access Control
+* MongoDB Data Persistence
+
+---
+
+# Future Improvements
+
+* JWT Authentication
+* Password Encryption
 * Customer Accounts
+* Email Notifications
+* Image Upload Support
+* Sales Reports
 * Inventory Management
+* Export Reports
 
 ---
 
-## Author
+# Author
 
-Developed by Situn Pradhan
+Situn Pradhan
 
 Full Stack Developer
 
 Tech Stack:
-React.js | Node.js | Express.js | MongoDB
+
+React.js | Node.js | Express.js | MongoDB Atlas
