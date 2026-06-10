@@ -5,7 +5,32 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export default function OrderDetailsDialog({ open, onClose, order }) {
+interface OrderItem {
+  image: string;
+  name: string;
+  weight: string;
+  quantity: number;
+}
+
+interface Order {
+  _id: string;
+  tokenNumber: number;
+  status: string;
+  total: number;
+  items: OrderItem[];
+}
+
+interface OrderDetailsDialogProps {
+  open: boolean;
+  onClose: () => void;
+  order: Order | null;
+}
+
+export default function OrderDetailsDialog({
+  open,
+  onClose,
+  order,
+}: OrderDetailsDialogProps) {
   if (!order) return null;
 
   return (
@@ -25,7 +50,7 @@ export default function OrderDetailsDialog({ open, onClose, order }) {
           </div>
 
           <div className="space-y-3">
-            {order.items?.map((item, index) => (
+            {order.items?.map((item: OrderItem, index: number) => (
               <div key={index} className="flex gap-4 border rounded-xl p-3">
                 <img
                   src={item.image}

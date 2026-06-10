@@ -8,7 +8,9 @@ import {
 import api from "@/services/api";
 
 import { useForm } from "react-hook-form";
+
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const productSchema = z.object({
@@ -25,17 +27,37 @@ const productSchema = z.object({
   price1000: z.coerce.number().min(1, "Required"),
 });
 
-export default function AddProductDialog({ open, onClose, onSuccess }) {
+type ProductFormData = z.output<typeof productSchema>;
+
+interface AddProductDialogProps {
+  open: boolean;
+
+  onClose: () => void;
+
+  onSuccess: () => void;
+}
+
+export default function AddProductDialog({
+  open,
+  onClose,
+  onSuccess,
+}: AddProductDialogProps) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<
+    z.input<typeof productSchema>,
+    any,
+    z.output<typeof productSchema>
+  >({
     resolver: zodResolver(productSchema),
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (
+    data: ProductFormData
+  ): Promise<void> => {
     try {
       await api.post("/products", {
         name: data.name,
@@ -73,13 +95,21 @@ export default function AddProductDialog({ open, onClose, onSuccess }) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Add Product</DialogTitle>
+          <DialogTitle>
+            Add Product
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
           <div>
             <input
               type="text"
@@ -89,7 +119,9 @@ export default function AddProductDialog({ open, onClose, onSuccess }) {
             />
 
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.name.message}
+              </p>
             )}
           </div>
 

@@ -10,8 +10,12 @@ import { useEffect } from "react";
 import api from "@/services/api";
 
 import { useForm } from "react-hook-form";
+
 import { z } from "zod";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Product } from "@/hooks/useProducts";
 
 const productSchema = z.object({
   name: z.string().min(2, "Product name is required"),
@@ -27,19 +31,39 @@ const productSchema = z.object({
   price1000: z.coerce.number().min(1, "Required"),
 });
 
+type ProductFormData =
+  z.output<typeof productSchema>;
+
+interface EditProductDialogProps {
+  open: boolean;
+
+  onClose: () => void;
+
+  product: Product | null;
+
+  onSuccess: () => void;
+}
+
 export default function EditProductDialog({
   open,
   onClose,
   product,
   onSuccess,
-}) {
+}: EditProductDialogProps) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(productSchema),
+  } = useForm<
+    z.input<typeof productSchema>,
+    any,
+    z.output<typeof productSchema>
+  >({
+    resolver:
+      zodResolver(
+        productSchema
+      ),
   });
 
   useEffect(() => {
@@ -49,46 +73,73 @@ export default function EditProductDialog({
 
         image: product.image || "",
 
-        description: product.description || "",
+        description:
+          product.description || "",
 
         price250:
-          product.weightOptions?.find((w) => w.weight === "250gm")?.price || "",
+          product.weightOptions?.find(
+            (w) =>
+              w.weight ===
+              "250gm"
+          )?.price || 0,
 
         price500:
-          product.weightOptions?.find((w) => w.weight === "500gm")?.price || "",
+          product.weightOptions?.find(
+            (w) =>
+              w.weight ===
+              "500gm"
+          )?.price || 0,
 
         price1000:
-          product.weightOptions?.find((w) => w.weight === "1kg")?.price || "",
+          product.weightOptions?.find(
+            (w) =>
+              w.weight ===
+              "1kg"
+          )?.price || 0,
       });
     }
   }, [product, reset]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (
+    data: ProductFormData
+  ): Promise<void> => {
+    if (!product) return;
+
     try {
-      await api.put(`/products/${product._id}`, {
-        name: data.name,
+      await api.put(
+        `/products/${product._id}`,
+        {
+          name: data.name,
 
-        image: data.image,
+          image: data.image,
 
-        description: data.description,
+          description:
+            data.description,
 
-        weightOptions: [
-          {
-            weight: "250gm",
-            price: data.price250,
-          },
+          weightOptions: [
+            {
+              weight:
+                "250gm",
+              price:
+                data.price250,
+            },
 
-          {
-            weight: "500gm",
-            price: data.price500,
-          },
+            {
+              weight:
+                "500gm",
+              price:
+                data.price500,
+            },
 
-          {
-            weight: "1kg",
-            price: data.price1000,
-          },
-        ],
-      });
+            {
+              weight:
+                "1kg",
+              price:
+                data.price1000,
+            },
+          ],
+        }
+      );
 
       onSuccess();
 
@@ -101,13 +152,23 @@ export default function EditProductDialog({
   if (!product) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit Product</DialogTitle>
+          <DialogTitle>
+            Edit Product
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(
+            onSubmit
+          )}
+          className="space-y-4"
+        >
           <div>
             <input
               type="text"
@@ -116,26 +177,38 @@ export default function EditProductDialog({
             />
 
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {
+                  errors.name
+                    .message
+                }
+              </p>
             )}
           </div>
 
           <div>
             <input
               type="text"
-              {...register("image")}
+              {...register(
+                "image"
+              )}
               className="w-full border rounded-xl p-3"
             />
 
             {errors.image && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.image.message}
+                {
+                  errors.image
+                    .message
+                }
               </p>
             )}
           </div>
 
           <textarea
-            {...register("description")}
+            {...register(
+              "description"
+            )}
             className="w-full border rounded-xl p-3"
           />
 
@@ -144,13 +217,19 @@ export default function EditProductDialog({
               <input
                 type="number"
                 placeholder="250gm"
-                {...register("price250")}
+                {...register(
+                  "price250"
+                )}
                 className="border rounded-xl p-3 w-full"
               />
 
               {errors.price250 && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.price250.message}
+                  {
+                    errors
+                      .price250
+                      .message
+                  }
                 </p>
               )}
             </div>
@@ -159,13 +238,19 @@ export default function EditProductDialog({
               <input
                 type="number"
                 placeholder="500gm"
-                {...register("price500")}
+                {...register(
+                  "price500"
+                )}
                 className="border rounded-xl p-3 w-full"
               />
 
               {errors.price500 && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.price500.message}
+                  {
+                    errors
+                      .price500
+                      .message
+                  }
                 </p>
               )}
             </div>
@@ -174,13 +259,19 @@ export default function EditProductDialog({
               <input
                 type="number"
                 placeholder="1kg"
-                {...register("price1000")}
+                {...register(
+                  "price1000"
+                )}
                 className="border rounded-xl p-3 w-full"
               />
 
               {errors.price1000 && (
                 <p className="text-red-500 text-xs mt-1">
-                  {errors.price1000.message}
+                  {
+                    errors
+                      .price1000
+                      .message
+                  }
                 </p>
               )}
             </div>
@@ -188,7 +279,7 @@ export default function EditProductDialog({
 
           <button
             type="submit"
-            className="w-full bg-linear-to-r from-orange-500 to-rose-500 text-white py-3 rounded-xl"
+            className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-white py-3 rounded-xl"
           >
             Update Product
           </button>

@@ -1,36 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
 import AddProductDialog from "@/components/admin/AddProductDialog";
 import EditProductDialog from "@/components/admin/EditProductDialog";
+
+import useProducts, { Product } from "@/hooks/useProducts";
+
 import api from "@/services/api";
 
 export default function ProductManagement() {
-  const [products, setProducts] = useState([]);
+  const { products, loading, refetch } = useProducts();
 
-  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
 
-  const [editOpen, setEditOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await api.get("/products");
-
-      setProducts(response.data.products);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (productId) => {
+  const handleDelete = async (productId: string): Promise<void> => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?",
     );
@@ -40,7 +26,7 @@ export default function ProductManagement() {
     try {
       await api.delete(`/products/${productId}`);
 
-      fetchProducts();
+      await refetch();
     } catch (error) {
       console.log(error);
 
@@ -70,7 +56,7 @@ export default function ProductManagement() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {products.map((product) => (
+        {products.map((product: Product) => (
           <div
             key={product._id}
             className="bg-white rounded-3xl border overflow-hidden hover:shadow-xl transition"
@@ -119,14 +105,14 @@ export default function ProductManagement() {
       <AddProductDialog
         open={open}
         onClose={() => setOpen(false)}
-        onSuccess={fetchProducts}
+        onSuccess={refetch}
       />
 
       <EditProductDialog
         open={editOpen}
         onClose={() => setEditOpen(false)}
         product={selectedProduct}
-        onSuccess={fetchProducts}
+        onSuccess={refetch}
       />
     </div>
   );

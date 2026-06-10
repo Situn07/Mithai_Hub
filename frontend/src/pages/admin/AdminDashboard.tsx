@@ -1,18 +1,25 @@
+import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ProductManagement from "./ProductManagement.jsx";
-import OrdersManagement from "./OrdersManagement.jsx";
+import ProductManagement from "./ProductManagement";
+import OrdersManagement from "./OrdersManagement";
 
 import { Package, ShoppingBag, IndianRupee, ClipboardList } from "lucide-react";
 
 import useDashboard from "@/hooks/useDashboard";
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: ReactNode;
+}
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
 
   const { stats, loading } = useDashboard();
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     localStorage.removeItem("user");
 
     localStorage.removeItem("token");
@@ -34,8 +41,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-
       <div className="sticky top-0 z-40 bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div>
@@ -55,42 +60,36 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Dashboard Content */}
-
       <div className="max-w-7xl mx-auto p-6">
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           <StatCard
             title="Total Orders"
-            value={stats?.totalOrders || 0}
+            value={stats?.totalOrders ?? 0}
             icon={<ClipboardList />}
           />
 
           <StatCard
             title="Today Orders"
-            value={stats?.todayOrders || 0}
+            value={stats?.todayOrders ?? 0}
             icon={<ShoppingBag />}
           />
 
           <StatCard
             title="Products"
-            value={stats?.totalProducts || 0}
+            value={stats?.totalProducts ?? 0}
             icon={<Package />}
           />
 
           <StatCard
             title="Revenue"
-            value={`₹${stats?.revenue || 0}`}
+            value={`₹${stats?.revenue ?? 0}`}
             icon={<IndianRupee />}
           />
         </div>
 
-        {/* Product Management */}
-
         <div className="mt-10">
           <ProductManagement />
         </div>
-
-        {/* Orders Management */}
 
         <div className="mt-10">
           <OrdersManagement />
@@ -100,7 +99,7 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ title, value, icon }) {
+function StatCard({ title, value, icon }: StatCardProps) {
   return (
     <div className="bg-white rounded-3xl border p-6 shadow-sm hover:shadow-xl transition">
       <div className="flex justify-between items-center">

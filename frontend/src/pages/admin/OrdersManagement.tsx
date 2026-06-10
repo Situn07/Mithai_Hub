@@ -1,16 +1,17 @@
 import { useState } from "react";
 
 import OrderDetailsDialog from "./OrderDetailsDialog";
-import useOrders from "@/hooks/useOrders";
+
+import useOrders, { Order } from "@/hooks/useOrders";
 
 export default function OrdersManagement() {
   const { orders, loading, deleteOrder } = useOrders();
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
-  const handleDelete = async (orderId) => {
+  const handleDelete = async (orderId: string): Promise<void> => {
     const confirmDelete = window.confirm("Delete this order?");
 
     if (!confirmDelete) return;
@@ -56,7 +57,7 @@ export default function OrdersManagement() {
             </thead>
 
             <tbody>
-              {orders.map((order) => (
+              {orders.map((order: Order) => (
                 <tr key={order._id} className="border-t">
                   <td className="p-4 font-bold text-orange-600">
                     #{order.tokenNumber}

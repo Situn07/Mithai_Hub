@@ -1,14 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 
+interface DashboardStats {
+  totalOrders: number;
+
+  todayOrders: number;
+
+  totalProducts: number;
+
+  revenue: number;
+}
+
 export default function useDashboard() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<unknown>(null);
 
-  const fetchDashboard = async () => {
+  const fetchDashboard = async (): Promise<void> => {
     try {
       setLoading(true);
 

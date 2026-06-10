@@ -1,15 +1,26 @@
-import { Routes, Route } from "react-router-dom";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 
 import Home from "../pages/counter/Home";
+
 import Packing from "@/pages/packing/Packing";
+
 import AdminDashboard from "@/pages/admin/AdminDashboard";
+
 import Login from "@/pages/auth/Login";
+
 import ProtectedRoute from "./ProtectedRoute";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+
+      <Route
+        path="/"
+        element={<Home />}
+      />
 
       <Route
         path="/packing"
@@ -29,7 +40,11 @@ export default function AppRoutes() {
         }
       />
 
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
     </Routes>
   );
 }
