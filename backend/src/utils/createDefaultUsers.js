@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 
 const createDefaultUsers = async () => {
@@ -7,9 +8,11 @@ const createDefaultUsers = async () => {
     });
 
     if (!admin) {
+      const hashedPassword = await bcrypt.hash("admin123", 10);
+
       await User.create({
         username: "admin",
-        password: "admin123",
+        password: hashedPassword,
         role: "ADMIN",
       });
 
@@ -21,9 +24,11 @@ const createDefaultUsers = async () => {
     });
 
     if (!packaging) {
+      const hashedPassword = await bcrypt.hash("packing123", 10);
+
       await User.create({
         username: "packing",
-        password: "packing123",
+        password: hashedPassword,
         role: "PACKAGING",
       });
 

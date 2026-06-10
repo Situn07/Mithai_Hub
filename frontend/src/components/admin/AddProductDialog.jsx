@@ -5,204 +5,160 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import { useState } from "react";
 import api from "@/services/api";
 
-export default function AddProductDialog({
-  open,
-  onClose,
-  onSuccess,
-}) {
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      image: "",
-      description: "",
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-      price250: "",
-      price500: "",
-      price1000: "",
-    });
+const productSchema = z.object({
+  name: z.string().min(2, "Product name is required"),
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.value,
-    });
+  image: z.string().url("Enter valid image URL"),
+
+  description: z.string().optional(),
+
+  price250: z.coerce.number().min(1, "Required"),
+
+  price500: z.coerce.number().min(1, "Required"),
+
+  price1000: z.coerce.number().min(1, "Required"),
+});
+
+export default function AddProductDialog({ open, onClose, onSuccess }) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(productSchema),
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      await api.post("/products", {
+        name: data.name,
+
+        image: data.image,
+
+        description: data.description,
+
+        weightOptions: [
+          {
+            weight: "250gm",
+            price: data.price250,
+          },
+
+          {
+            weight: "500gm",
+            price: data.price500,
+          },
+
+          {
+            weight: "1kg",
+            price: data.price1000,
+          },
+        ],
+      });
+
+      onSuccess();
+
+      onClose();
+
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSubmit =
-    async (e) => {
-      e.preventDefault();
-
-      try {
-        await api.post(
-          "/products",
-          {
-            name: formData.name,
-
-            image:
-              formData.image,
-
-            description:
-              formData.description,
-
-            weightOptions: [
-              {
-                weight:
-                  "250gm",
-                price:
-                  Number(
-                    formData.price250
-                  ),
-              },
-
-              {
-                weight:
-                  "500gm",
-                price:
-                  Number(
-                    formData.price500
-                  ),
-              },
-
-              {
-                weight:
-                  "1kg",
-                price:
-                  Number(
-                    formData.price1000
-                  ),
-              },
-            ],
-          }
-        );
-
-        onSuccess();
-
-        onClose();
-
-        setFormData({
-          name: "",
-          image: "",
-          description: "",
-
-          price250: "",
-          price500: "",
-          price1000: "",
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
   return (
-    <Dialog
-      open={open}
-      onOpenChange={onClose}
-    >
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
-
         <DialogHeader>
-
-          <DialogTitle>
-            Add Product
-          </DialogTitle>
-
+          <DialogTitle>Add Product</DialogTitle>
         </DialogHeader>
 
-        <form
-          onSubmit={
-            handleSubmit
-          }
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Product Name"
+              {...register("name")}
+              className="w-full border rounded-xl p-3"
+            />
 
-          <input
-            type="text"
-            name="name"
-            placeholder="Product Name"
-            value={
-              formData.name
-            }
-            onChange={
-              handleChange
-            }
-            className="w-full border rounded-xl p-3"
-            required
-          />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
+          </div>
 
-          <input
-            type="text"
-            name="image"
-            placeholder="Image URL"
-            value={
-              formData.image
-            }
-            onChange={
-              handleChange
-            }
-            className="w-full border rounded-xl p-3"
-            required
-          />
+          <div>
+            <input
+              type="text"
+              placeholder="Image URL"
+              {...register("image")}
+              className="w-full border rounded-xl p-3"
+            />
+
+            {errors.image && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.image.message}
+              </p>
+            )}
+          </div>
 
           <textarea
-            name="description"
             placeholder="Description"
-            value={
-              formData.description
-            }
-            onChange={
-              handleChange
-            }
+            {...register("description")}
             className="w-full border rounded-xl p-3"
           />
 
           <div className="grid grid-cols-3 gap-3">
+            <div>
+              <input
+                type="number"
+                placeholder="250gm"
+                {...register("price250")}
+                className="border rounded-xl p-3 w-full"
+              />
 
-            <input
-              type="number"
-              name="price250"
-              placeholder="250gm"
-              value={
-                formData.price250
-              }
-              onChange={
-                handleChange
-              }
-              className="border rounded-xl p-3"
-              required
-            />
+              {errors.price250 && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.price250.message}
+                </p>
+              )}
+            </div>
 
-            <input
-              type="number"
-              name="price500"
-              placeholder="500gm"
-              value={
-                formData.price500
-              }
-              onChange={
-                handleChange
-              }
-              className="border rounded-xl p-3"
-              required
-            />
+            <div>
+              <input
+                type="number"
+                placeholder="500gm"
+                {...register("price500")}
+                className="border rounded-xl p-3 w-full"
+              />
 
-            <input
-              type="number"
-              name="price1000"
-              placeholder="1kg"
-              value={
-                formData.price1000
-              }
-              onChange={
-                handleChange
-              }
-              className="border rounded-xl p-3"
-              required
-            />
+              {errors.price500 && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.price500.message}
+                </p>
+              )}
+            </div>
 
+            <div>
+              <input
+                type="number"
+                placeholder="1kg"
+                {...register("price1000")}
+                className="border rounded-xl p-3 w-full"
+              />
+
+              {errors.price1000 && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.price1000.message}
+                </p>
+              )}
+            </div>
           </div>
 
           <button
@@ -211,9 +167,7 @@ export default function AddProductDialog({
           >
             Add Product
           </button>
-
         </form>
-
       </DialogContent>
     </Dialog>
   );

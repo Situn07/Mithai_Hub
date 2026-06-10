@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search, ShoppingCart, Package } from "lucide-react";
-
-import api from "@/services/api";
 
 import { useNavigate } from "react-router-dom";
 
 import ProductModal from "@/components/counter/ProductModal";
 import CartSidebar from "@/components/counter/CartSidebar";
 
-import { useCart } from "@/context/CartContext";
+import useCartStore from "@/store/cartStore";
+import useProducts from "@/hooks/useProducts";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -19,27 +18,9 @@ export default function Home() {
 
   const [search, setSearch] = useState("");
 
-  const [products, setProducts] = useState([]);
+  const cartItems = useCartStore((state) => state.cartItems);
 
-  const [loading, setLoading] = useState(true);
-
-  const { cartItems } = useCart();
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await api.get("/products");
-
-      setProducts(response.data.products);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { products, loading } = useProducts();
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(search.toLowerCase()),
@@ -47,8 +28,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
@@ -66,6 +45,7 @@ export default function Home() {
             >
               Admin
             </button>
+
             <button
               onClick={() => navigate("/login")}
               className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl border bg-white hover:bg-orange-50 hover:border-orange-300 transition"
@@ -90,8 +70,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero */}
-
       <section className="max-w-7xl mx-auto px-4 pt-8">
         <div className="rounded-3xl bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 text-white p-8 md:p-12 shadow-xl">
           <h2 className="text-3xl md:text-5xl font-bold">
@@ -104,8 +82,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
-      {/* Search */}
 
       <section className="max-w-7xl mx-auto px-4 mt-8">
         <div className="bg-white rounded-2xl border border-slate-200 p-4 flex items-center gap-3 shadow-sm">
@@ -120,8 +96,6 @@ export default function Home() {
           />
         </div>
       </section>
-
-      {/* Products */}
 
       <section className="max-w-7xl mx-auto px-4 py-10">
         <div className="flex items-center justify-between mb-6">
@@ -171,15 +145,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Product Modal */}
-
       <ProductModal
         open={!!selectedProduct}
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
       />
-
-      {/* Cart Sidebar */}
 
       <CartSidebar open={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
