@@ -1,6 +1,6 @@
 # MithaiHub - Sweet Shop Management System
 
-MithaiHub is a Full Stack Sweet Shop Management System built using React.js, Node.js, Express.js, and MongoDB Atlas.
+MithaiHub is a Full Stack Sweet Shop Management System built using React, TypeScript, Node.js, Express.js, and MongoDB Atlas.
 
 The application streamlines sweet shop operations through dedicated modules for Customers, Packaging Staff, and Administrators.
 
@@ -15,6 +15,7 @@ The application streamlines sweet shop operations through dedicated modules for 
 * View product details
 * Select weight options (250gm, 500gm, 1kg)
 * Add products to cart
+* Manage cart using Zustand
 * Place orders
 * Automatic token generation
 
@@ -54,13 +55,19 @@ NEW → PACKING → READY → DELIVERED
 
 ## Frontend
 
-* React.js
+* React 19
+* TypeScript
 * Vite
-* Tailwind CSS
+* Tailwind CSS v4
 * shadcn/ui
+* Zustand
+* React Hook Form
+* Zod
 * Axios
 * React Router DOM
 * Lucide React
+
+---
 
 ## Backend
 
@@ -70,6 +77,73 @@ NEW → PACKING → READY → DELIVERED
 * Mongoose
 * CORS
 * Dotenv
+
+---
+
+# Architecture
+
+Frontend Structure
+
+* Components
+* Pages
+* Hooks
+* Store (Zustand)
+* Services (Axios)
+* Routes
+* UI Components (shadcn)
+
+Backend Structure
+
+* Controllers
+* Models
+* Routes
+* Middleware
+* Database Configuration
+
+---
+
+# State Management
+
+The application uses Zustand for global state management.
+
+Features handled by Zustand:
+
+* Cart Management
+* Add To Cart
+* Remove From Cart
+* Clear Cart
+* Calculate Total Amount
+
+---
+
+# Form Validation
+
+The application uses:
+
+* React Hook Form
+* Zod Schema Validation
+
+Implemented In:
+
+* Login Form
+* Add Product Form
+* Edit Product Form
+
+---
+
+# Custom Hooks
+
+Implemented reusable custom hooks:
+
+* useProducts()
+* useOrders()
+* useDashboard()
+
+Benefits:
+
+* Reusable API Logic
+* Cleaner Components
+* Better Maintainability
 
 ---
 
@@ -117,28 +191,30 @@ Admin Monitors Complete Workflow
 
 # Validation Steps
 
-### Admin Flow
+## Admin Flow
 
 1. Login as Admin
-2. Add Products
-3. Edit Products
-4. Delete Products
-5. View Dashboard Statistics
-6. Monitor Orders
+2. Add Product
+3. Edit Product
+4. Delete Product
+5. Monitor Orders
+6. Track Revenue
 
-### Customer Flow
+## Customer Flow
 
 1. Browse Products
-2. Add Products To Cart
-3. Place Order
-4. Receive Token Number
+2. Search Products
+3. Add Products To Cart
+4. Place Order
+5. Receive Token Number
 
-### Packaging Flow
+## Packaging Flow
 
 1. Login as Packaging Staff
 2. View Incoming Orders
-3. Update Status
-4. Complete Order Workflow
+3. Start Packing
+4. Mark Ready
+5. Mark Delivered
 
 ---
 
@@ -174,16 +250,15 @@ npm run dev
 
 # Environment Variables
 
-Create a `.env` file inside the backend folder.
+Create a .env file inside backend folder.
 
 ```env
 PORT=5000
 
-MONGO_URI=your_mongodb_atlas_connection_string
+MONGO_URI=your_mongodb_connection_string
+```
 
 ---
-
-
 
 # Key Functionalities
 
@@ -193,21 +268,26 @@ MONGO_URI=your_mongodb_atlas_connection_string
 * Packing Workflow Management
 * Dashboard Analytics
 * Revenue Tracking
+* Zustand State Management
+* Form Validation Using Zod
 * Role Based Access Control
 * MongoDB Data Persistence
+* TypeScript Type Safety
 
 ---
 
 # Future Improvements
 
 * JWT Authentication
-* Password Encryption
+* Password Encryption using bcrypt
+* Refresh Token System
 * Customer Accounts
 * Email Notifications
-* Image Upload Support
-* Sales Reports
+* Image Upload Support (Cloudinary)
 * Inventory Management
+* Sales Reports
 * Export Reports
+* Payment Gateway Integration
 
 ---
 
@@ -219,4 +299,4 @@ Full Stack Developer
 
 Tech Stack:
 
-React.js | Node.js | Express.js | MongoDB Atlas
+React | TypeScript | Node.js | Express.js | MongoDB | Zustand | Zod | React Hook Form
